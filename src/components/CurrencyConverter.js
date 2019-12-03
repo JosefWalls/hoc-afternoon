@@ -1,0 +1,82 @@
+import React from "react"
+import CurrencyDisplay from "./CurrencyDisplay"
+
+const withCurrency = (BaseComponent) => {
+    class Currency extends Component {
+        constructor(){
+            super()
+
+            state = {
+                currencyChosen: false,
+                selectedCurrency: 'Select Currency',
+                amount: 0
+            }
+
+            handleAmountIncrease = () => {
+                this.setState((prevState) => {
+                    return {
+                        amount: (prevState.amount += 1)
+                    }
+                })
+            }
+
+            handleAmountDescrease = () => {
+                this.setState((prevState) => {
+                    return {
+                        amount: (prevState.amount -= 1)
+                    }
+                })
+            }      
+
+            handleOptionSelect = (evt) => {
+                const userValue = evt.target.value
+                return {
+                    selectedCurrency: userValue,
+                    currencyChosen: userValue === "Select Country" ? false: true
+                }
+            }
+        }
+        render(){
+                    const currencyData = [
+                        { name: 'Japanese Yen', symbol: '¥', rate: 113.6 },
+                        { name: 'British Pound', symbol: '£', rate: 0.77 },
+                        { name: 'Canadian Dollar', symbol: 'CAD', rate: 1.32 },
+                        { name: 'Mexican Peso', symbol: 'Mex$', rate: 20.41 },
+                        { name: 'Swiss Franc', symbol: 'Fr.', rate: 1.01 }
+                    ]
+
+                    const currencyOptions = currencyData.map((val, i) => {
+                        return (
+                            <option key={index} value={index}> 
+                                {val.name}
+                            </option>
+                        )
+                    })
+            return (
+                <div>
+                        <select onChange={this.handleOptionSelect}>
+                            <option value="Select Currency">
+                                Select Currency
+                                {currencyOptions}
+                            </option>
+                        </select>
+                        <div>
+                            <button className="add" onClick={this.handleAmountIncrease}>+</button>
+                            <button className="minus" onClick={this.handleAmountDescrease}>-</button>
+                        </div>
+                        {this.state.selectedCurrency ? <BaseComponent 
+                        currency={currencyData[this.state.selectedCurrency]}
+                        amount={this.state.amount}
+                        /> : <p>Please Select Currency</p>}
+                </div>
+            )
+        }
+    }
+
+
+}
+
+
+const ExchangedCurrency = withCurrency(CurrencyDisplay);
+
+export default ExchangedCurrency;
